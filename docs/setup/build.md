@@ -28,6 +28,9 @@ are shipped separately. `-Check` also constructs the playback and Monitor
 windows in an isolated mode without opening audio devices or contacting HomePod.
 Use `PodCast.exe --settings` for source setup, or `--window` for a persistent
 playback panel during qualification. Normal launch retains tray behavior.
+For normal-user acceptance, launch through Explorer or Windows Run and configure
+the source there. Tool-launched children can inherit an MSIX host's private
+AppData view, which has separate preferences from a normal Windows launch.
 Do not distribute residual output after any failed command.
 
 A local SDK may be placed in `artifacts/dotnet/`; otherwise `dotnet` must be on

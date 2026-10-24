@@ -65,6 +65,15 @@ impl State {
         self.frames.push_back(frame);
     }
 }
+fn capture_error(error: &anyhow::Error) -> String {
+    let instruction = if error.downcast_ref::<windows::core::Error>()
+        .is_some_and(|error| error.code() == AUDCLNT_E_DEVICE_INVALIDATED) {
+        "CABLE Output became unavailable or its format changed. Restore CABLE Output in Windows Sound settings, then reconnect."
+    } else {
+        "CABLE Output capture failed. Check that CABLE Output is enabled in Windows Sound settings, then reconnect."
+    };
+    format!("{instruction} Details: {error:#}")
+}
 pub struct Loopback {
     equalizer_control: crate::equalizer::Control,
     state: Arc<Mutex<State>>,
@@ -92,7 +101,7 @@ impl Loopback {
             .name("wasapi-capture".into())
             .spawn(move || {
                 if let Err(e) = capture(endpoint, rate, child_stop, &child_state, &tx) {
-                    let message = format!("{e:#}");
+                    let message = capture_error(&e);
                     child_state.lock().unwrap().error = Some(message.clone());
                     let _ = tx.try_send(Err(message));
                 }
@@ -532,6 +541,21 @@ mod tests {
         source.packet(1.0).unwrap();
         assert_eq!(source.metrics().source_peak, 0.0);
         assert_eq!(source.metrics().underrun_packets, 1);
+    }
+    #[test]
+    fn invalidated_cable_error_explains_restore_and_preserves_cause() {
+        let source = source();
+        let error = anyhow::Error::new(windows::core::Error::from_hresult(AUDCLNT_E_DEVICE_INVALIDATED))
+            .context("reading selected capture endpoint");
+        source.state.lock().unwrap().error = Some(capture_error(&error));
+        let message = source.packet(0.1).unwrap_err().to_string();
+        assert!(message.contains("CABLE Output became unavailable or its format changed"));
+        assert!(message.contains("Restore CABLE Output in Windows Sound settings, then reconnect"));
+        assert!(message.contains("reading selected capture endpoint"));
+        assert!(message.to_ascii_lowercase().contains("0x88890004"));
+        let other = capture_error(&anyhow::anyhow!("unsupported capture format"));
+        assert!(other.contains("CABLE Output capture failed"));
+        assert!(other.contains("unsupported capture format"));
     }
     #[test]
     fn equalizer_precedes_master_gain_and_pcm_conversion() {

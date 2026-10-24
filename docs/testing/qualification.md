@@ -40,6 +40,15 @@ Use isolated fault injection for engine failure, source loss, format changes and
 
 After controlled tests pass, coordinate real Spotify restart, receiver preemption, network interruption and sleep/resume with the owner. Do not interrupt the user's network or suspend the laptop merely to obtain an early test result. Recheck isolation after recovery.
 
+For an agreed network test, an elevated PowerShell can run
+`./scripts/test-sender-network.ps1 -SenderProcessId <verified-id> -ReceiverAddress <selected-IPv4>`.
+It blocks all instances of that sender executable to that receiver for 15 seconds,
+then removes the captured rule in `finally` with terminating cleanup errors. Its
+unique recovery name is saved under ignored `artifacts/` before creation. If the
+elevated host is forcibly closed, remove that exact rule manually; firewall rules
+have no automatic expiry. Confirm rule removal, app response
+and actual listening recovery; do not disable the laptop's entire connection.
+
 Run the two-hour soak only on the intended setup with listening confirmation. Sample memory and queue diagnostics without recording audio. Launch the final self-contained package as a normal user, repeat basic routing/control checks, and review credential storage, log redaction and rebuild instructions. Track A1-A10 separately; mark unavailable hardware checks BLOCKED and unattempted checks NOT RUN.
 
 ## Initial authentication delay

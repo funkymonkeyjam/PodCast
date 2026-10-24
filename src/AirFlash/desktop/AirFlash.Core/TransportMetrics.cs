@@ -24,7 +24,16 @@ public sealed record TransportMetrics(double? SessionUptimeMs, long? SenderLateR
 public sealed record EngineNotice(string Code, string Host, string Channel, string Message, bool? Retryable = null)
 {
     public static EngineNotice Parse(JsonElement item) => new(item.Text("code", "engine_error"), item.Text("host"), item.Text("channel"), item.Text("message", L.Get("Audio engine error.")), item.Boolean("retryable"));
-    public string Detail => string.Join(" · ", new[] { Message, Host, Channel, Code }.Where(s => !string.IsNullOrWhiteSpace(s)));
+    public string Detail
+    {
+        get
+        {
+            var detail = string.Join(" · ", new[] { Message, Host, Channel, Code }.Where(s => !string.IsNullOrWhiteSpace(s)));
+            return Retryable != false && Code is ("write_failed" or "peer_closed" or "connection_reset" or "socket_error" or "read_timeout" or "feedback_timeout" or "media_send_timeout")
+                ? L.Get("The HomePod connection was interrupted. Check the HomePod and network, then reconnect.") + "\n" + detail
+                : detail;
+        }
+    }
 }
 public sealed record PlaybackDiagnostics(long ReconnectCount = 0, EngineNotice? LastFault = null, StreamMetrics? CaptureBeforeFault = null,
     TransportMetrics? TransportBeforeFault = null, TransportMetrics? Transport = null, IReadOnlyList<EngineNotice>? Warnings = null);

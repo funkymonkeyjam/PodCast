@@ -20,24 +20,24 @@ saved explicit CABLE Output by stable ID. Spotify alone uses CABLE Input.
 
 | ID | Status | Current evidence / remaining procedure |
 |---|---|---|
-| A1 | NOT RUN | Self-contained qualification executable launches; embedded-engine hello and endpoint enumeration pass. Final delivered startup acceptance pending. |
+| A1 | PASS | Checked self-contained package at 816d4aa launches through Windows Run as the normal user; source selection and Office connection work. |
 | A2 | PASS | Office discovery, transient authentication, PCM 44100 negotiation and five-second PTP stream complete. Owner confirmed the stronger synthetic tone from Office. Current receiver policy does not require persistent PIN pairing. |
 | A3 | PASS | After raising Spotify's volume to 40%, owner confirmed music only on Office, silent on the local Poly Sync speaker. |
 | A4 | PASS | Owner confirmed the separate notification only on Poly Sync while Spotify remained only on Office. |
 | A5 | PASS | Actual pause/resume and source silence/activity observed; receiver volume 73→68 confirmed and restored to 73. Disconnect stops the engine cleanly. Owner confirmed tray panel opens while music continues. |
-| A6 | NOT RUN | Automated cancellation, buffer and source rejection checks pass; actual recovery matrix pending. |
+| A6 | NOT RUN | Actual Spotify restart, engine exit, source removal, source-format invalidation and scoped network interruption recover with no fallback; listening confirmations recorded below. Receiver preemption and sleep/resume remain. |
 | A7 | NOT RUN | Initial 30-minute session passed with owner-confirmed no gaps/stutters. Final two-hour audible soak remains unrun; owner needs to listen at a later session. |
-| A8 | NOT RUN | Finite probes disconnect; persistent app disconnect/routing restoration pending. |
-| A9 | NOT RUN | Selected source persisted; DPAPI and bounded/redacted log tests pass. Final persistence/credential acceptance pending. |
-| A10 | NOT RUN | Locked checked build and independent review pass; final packaged/rebuilt delivery acceptance pending. |
+| A8 | PASS | Actual Disconnect exits sender; no new sender during follow-up wait. Spotify output changed to Default using Volume mixer; owner confirmed local Poly Sync only and Office silent. Route then restored to CABLE Input. |
+| A9 | PASS | Normal Windows setup then quit/relaunch retains explicit source and connects Office. Settings/DPAPI/bounded-redacted-log tests pass; this receiver policy uses transient authentication, so no persistent PIN credential was required. |
+| A10 | NOT RUN | Root checked package 816d4aa has source revision/setup/GPL/.NET/Rust notices and clear review. New capture/network recovery guidance passes affected checks/review; its final package rebuild is pending. |
 
 ### Completed software checks
 
 - Unmodified tag: .NET 202 tests pass; WPF builds with SDK 10.0.401, zero
   warnings/errors. Native 49 pass, two ignored (hardware capture and wall-clock
   localhost soak). No baseline playback success is claimed.
-- Adapted checks: Rust 55 pass, two ignored; Clippy with warnings denied passes;
-  .NET 225 pass; upstream Python 117 pass; black-box IPC safety five pass.
+- Adapted checked build at 816d4aa: Rust 55 pass, two ignored; Clippy with warnings
+  denied passes; .NET 227 pass; upstream Python 117 pass; black-box IPC safety five pass.
   Self-contained Windows x64 publish succeeds. The isolated `--ui-smoke
   --window-only` check constructs and lays out the playback and Monitor windows
   without hardware access; actual app launch also passes. Eight native-notice
@@ -98,6 +98,48 @@ remained throughout 61 resource samples; no audio was recorded.
   Desktop private memory 113.91–136.53 MiB (113.91→123.40), handles 764→765,
   with panel/Monitor activity during the run. The final two-hour trend remains
   unverified; this initial result does not pass all of A7.
+
+### Normal-user startup and recovery checks
+
+The tool-launched qualification app inherited Codex's MSIX AppData redirection.
+The apparent Roaming config resolves to Codex's LocalCache file. A normal Windows
+Run launch on the same PC correctly begins with separate first-run preferences;
+this was initially mistaken for lost persistence. Configure CABLE Output in that
+normal context once. Quit/relaunch through Run retained it and connected Office
+without reselecting. No application settings code was changed for this diagnosis.
+
+Spotify fully exited/restarted while the same sender stayed running; the owner
+confirmed resumed music only on Office. The controlled sender termination
+displayed **The audio engine exited** and stopped sending. Manual Office Connect
+created one fresh sender; the owner confirmed current music only on Office,
+without old audio replay.
+
+Disabling only the selected CABLE Output recording endpoint stopped capture with
+AUDCLNT_E_DEVICE_INVALIDATED (0x88890004), leaving zero senders and no alternate
+capture. Re-enabling restored its original default-device role; explicit Connect
+opened the same endpoint and resumed source activity. The bare HRESULT prompted
+a narrow diagnostic follow-up: restore/reconnect instructions plus the original
+cause. Its native suite passes 56 tests (two hardware/wall-clock cases ignored),
+Clippy and binary audit pass, and independent review is clear. Packaging and the
+remaining actual recovery cases are still in progress.
+
+The owner changed the active capture mix from stereo 24-bit 48 kHz to stereo
+24-bit 88.2 kHz. The existing sender stopped with device-invalidated error rather
+than staying silently Playing. Explicit Connect opened a new session: Monitor
+reported 88,200 Hz input, PCM 44,100 Hz / 16-bit output, maximum queue age 39.1 ms
+and no send/sync errors. The owner confirmed music only on Office, then restored
+the original stereo 24-bit 48 kHz setting. This again stopped the old sender;
+explicit reconnect restored source activity. Final original-rate/isolation
+confirmation follows the remaining recovery checks.
+
+An owner-approved elevated helper blocked only the current sender executable
+to Office for 15 seconds. The sender exited with feedback `write_failed`;
+the helper removed its captured rule and a separate query found zero remaining
+PodCast test rules. Explicit Connect created one fresh sender; the owner
+confirmed current music only on Office, Poly Sync silent and no old audio replay,
+also confirming the restored original 48 kHz path. No laptop Wi-Fi interruption
+was needed. The diagnostic follow-up adds reconnect guidance for known transport
+failure codes while retaining raw details; the full desktop suite passes 246.
 
 Continue [qualification](qualification.md). Reset affected results after relevant
 changes; packet counts and mocks never establish listening acceptance.
