@@ -206,6 +206,9 @@
           <StackPanel>
             <TextBlock Text="{Binding App.StatusTitle}" FontSize="20" FontWeight="SemiBold"/>
             <TextBlock Text="{Binding App.StatusDetail}" Style="{StaticResource Hint}" Margin="0,8,0,0"/>
+            <TextBlock Text="{Binding App.SourceStatus}" Style="{StaticResource Hint}" Margin="0,12,0,4"/>
+            <ProgressBar Minimum="0" Maximum="100" Value="{Binding App.SourceLevel, Mode=OneWay}" Height="8" AutomationProperties.Name="CABLE Output source level"/>
+            <TextBlock Text="Latest source packet peak before EQ and gain; source activity does not confirm HomePod playback." Style="{StaticResource Hint}" Margin="0,6,0,0"/>
           </StackPanel>
         </Border>
         <UniformGrid Columns="2">

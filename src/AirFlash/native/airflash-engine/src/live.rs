@@ -45,6 +45,7 @@ pub struct Metrics {
     pub capture_to_send_p95_ms: Option<f64>,
     pub last_audio_qpc_ns: u64,
     pub input_rate: u32,
+    pub source_peak: f32,
 }
 struct State {
     equalizer: crate::equalizer::Processor,
@@ -127,6 +128,7 @@ impl Loopback {
         let mut marker = None;
         let now = qpc_ns();
         let mut underrun = false;
+        s.metrics.source_peak = 0.0;
         for _ in 0..FRAMES {
             let frame = if let Some(f) = s.frames.pop_front() {
                 f
@@ -138,7 +140,9 @@ impl Loopback {
                     qpc: now,
                 }
             };
-            if frame.left.abs().max(frame.right.abs()) > 0.004 {
+            let peak = frame.left.abs().max(frame.right.abs());
+            s.metrics.source_peak = s.metrics.source_peak.max(peak);
+            if peak > 0.004 {
                 s.metrics.last_audio_qpc_ns = frame.qpc;
                 marker.get_or_insert(frame.qpc);
             }
@@ -506,6 +510,27 @@ mod tests {
             });
         }
         assert!(source.packet(0.1).unwrap().0.iter().any(|b| *b != 0));
+        assert_eq!(source.metrics().underrun_packets, 1);
+    }
+    #[test]
+    fn source_peak_observes_input_before_gain_and_resets_for_silence() {
+        let source = source();
+        for _ in 0..FRAMES {
+            source.state.lock().unwrap().push_frame(Frame {
+                left: 0.01, right: -0.02, qpc: qpc_ns(),
+            });
+        }
+        assert!(source.packet(0.0).unwrap().0.iter().all(|sample| *sample == 0));
+        assert_eq!(source.metrics().source_peak, 0.02);
+        for _ in 0..FRAMES {
+            source.state.lock().unwrap().push_frame(Frame {
+                left: 0.0, right: 0.0, qpc: qpc_ns(),
+            });
+        }
+        source.packet(1.0).unwrap();
+        assert_eq!(source.metrics().source_peak, 0.0);
+        source.packet(1.0).unwrap();
+        assert_eq!(source.metrics().source_peak, 0.0);
         assert_eq!(source.metrics().underrun_packets, 1);
     }
     #[test]

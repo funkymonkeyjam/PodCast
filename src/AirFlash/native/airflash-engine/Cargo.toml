@@ -3,6 +3,7 @@ name = "airflash-engine"
 version = "0.1.0"
 edition = "2024"
 license = "GPL-3.0-or-later OR AirFlash Commercial License"
+license-file = "../../LICENSE"
 rust-version = "1.85"
 
 [dependencies]

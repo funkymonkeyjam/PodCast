@@ -21,7 +21,7 @@ public sealed class TrayService : IDisposable
     private readonly Action _settings, _quit;
     private readonly uint _taskbarCreated = RegisterWindowMessage("TaskbarCreated");
     private readonly Guid _guid;
-    private static readonly Guid ProductionGuid = new("c73f47dc-f107-4a67-ac0e-654cf5ba6c7a");
+    internal static readonly Guid ProductionGuid = new("c73f47dc-f107-4a67-ac0e-654cf5ba6c7a");
     private const uint CallbackMessage = 0x8001;
     private string? _lastTitle;
     private bool _disposed;

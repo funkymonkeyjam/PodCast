@@ -18,6 +18,14 @@ The script restores locked dependencies, tests, builds the native engine,
 audits its Windows dependencies and publishes a self-contained WPF build in
 `dist/PodCast/`. No installer, driver, routing change or receiver session runs.
 `PodCast.exe` embeds the engine; notices and setup accompany it.
+The build collects actual license/notice texts from the locked Rust packages
+and Rust toolchain into `ThirdPartyNotices.Native.txt`, failing if required texts
+are unavailable. Install the pinned toolchain's `rust-docs` component if its
+COPYRIGHT and license files are absent. Two published crates omit license bodies;
+[reviewed supplements](../../licenses/native/README.md) pin their provenance and
+hashes. Unknown omissions still fail. Existing .NET and UI dependency notices
+are shipped separately. `-Check` also constructs the playback and Monitor
+windows in an isolated mode without opening audio devices or contacting HomePod.
 Use `PodCast.exe --settings` for source setup, or `--window` for a persistent
 playback panel during qualification. Normal launch retains tray behavior.
 Do not distribute residual output after any failed command.
@@ -29,6 +37,8 @@ PowerShell process. No downloaded toolchains or build output belong in Git.
 For a Dropbox checkout, set CARGO_TARGET_DIR to an absolute local directory
 outside Dropbox to avoid sync locks. The build audits that output and stages
 the resulting executable at the WPF embedding path before publishing.
+For the same reason, UV_CACHE_DIR and UV_PROJECT_ENVIRONMENT can point to
+dedicated absolute directories outside Dropbox.
 
 The imported upstream `src/AirFlash/scripts/build.ps1` reserves upstream release
 versions and creates an AirFlash MSI. Use the root script for PodCast.

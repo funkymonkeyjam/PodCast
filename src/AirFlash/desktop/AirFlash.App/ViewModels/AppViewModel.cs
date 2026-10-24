@@ -51,6 +51,10 @@ public sealed class AppViewModel : ObservableObject, IAsyncDisposable
     public string MonitorUnderruns => _snapshot.Metrics?.Underruns?.ToString() ?? "—";
     public string MonitorDrops => _snapshot.Metrics?.DroppedFrames?.ToString() ?? "—";
     public string MonitorRate => _snapshot.Metrics is { InputRate: > 0 } m ? $"{m.InputRate:N0} Hz" : "—";
+    public double SourceLevel => _snapshot.State is PlaybackState.Streaming or PlaybackState.Standby ? Math.Clamp(_snapshot.Metrics?.SourcePeak ?? 0, 0, 1) * 100 : 0;
+    public string SourceStatus => _snapshot.State is not (PlaybackState.Streaming or PlaybackState.Standby) ? "Source inactive" :
+        _snapshot.Metrics?.SourcePeak is not { } peak ? "Waiting for source level" :
+        $"{(peak > 0.0001 ? "Source audio detected" : "Source silent")} · raw peak {peak:F6}";
     public string MonitorStreamRate => _snapshot.StreamRate is { } rate and > 0 ? $"{rate:N0} Hz · 16-bit" : "—";
     public string MonitorRecoveries => _snapshot.Diagnostics?.Transport?.SenderLateRecoveries?.ToString() ?? "—";
     public string MonitorSkipped => _snapshot.Diagnostics?.Transport?.SkippedPackets?.ToString() ?? "—";
@@ -313,6 +317,10 @@ public sealed class AppViewModel : ObservableObject, IAsyncDisposable
         var previous = _snapshot;
         _snapshot = snapshot;
         Notify(nameof(Snapshot));
+        if (previous.State != snapshot.State || previous.Metrics?.SourcePeak != snapshot.Metrics?.SourcePeak)
+        {
+            Notify(nameof(SourceLevel)); Notify(nameof(SourceStatus));
+        }
         if (title != StatusTitle) Notify(nameof(StatusTitle));
         if (detail != StatusDetail) Notify(nameof(StatusDetail));
         if (errors != ErrorDetails) Notify(nameof(ErrorDetails));

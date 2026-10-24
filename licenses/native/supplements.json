@@ -1,0 +1,29 @@
+[
+  {
+    "name": "mp4parse",
+    "version": "0.10.1",
+    "license": "MPL-2.0",
+    "source": "registry+https://github.com/rust-lang/crates.io-index",
+    "file": "mp4parse-0.10.1-MPL-2.0.txt",
+    "sha256": "fab3dd6bdab226f1c08630b1dd917e11fcb4ec5e1e020e2c16f83a0a13863e85",
+    "provenance": "Exact upstream repository LICENSE at release v0.10.1, commit 80eb3089a4629dd5493de0e216e9c100a4b91eb1. The published subcrate omits this root file; src/lib.rs retains the MPL-2.0 declaration.",
+    "urls": [
+      "https://github.com/mozilla/mp4parse-rust/blob/80eb3089a4629dd5493de0e216e9c100a4b91eb1/LICENSE",
+      "https://github.com/mozilla/mp4parse-rust/blob/80eb3089a4629dd5493de0e216e9c100a4b91eb1/mp4parse/Cargo.toml"
+    ]
+  },
+  {
+    "name": "realfft",
+    "version": "3.5.0",
+    "license": "MIT",
+    "source": "registry+https://github.com/rust-lang/crates.io-index",
+    "file": "MIT-standard.txt",
+    "sha256": "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5",
+    "provenance": "Standardized MIT body from SPDX License List 3.28.0, commit c4a7237ec8f4654e867546f9f409749300f1bf4c; not an upstream RealFFT license file. RealFFT 3.5.0 Cargo.toml and README declare MIT at published VCS revision d0d4eee0525fd27c96c8a046d6d107acd5ed84a6. Cargo author: HEnquist <henrik.enquist@gmail.com>. Upstream supplies no license body or copyright year; standardized placeholders are retained and no copyright notice is invented.",
+    "urls": [
+      "https://github.com/spdx/license-list-data/blob/c4a7237ec8f4654e867546f9f409749300f1bf4c/text/MIT.txt",
+      "https://github.com/HEnquist/realfft/blob/d0d4eee0525fd27c96c8a046d6d107acd5ed84a6/Cargo.toml",
+      "https://github.com/HEnquist/realfft/blob/d0d4eee0525fd27c96c8a046d6d107acd5ed84a6/README.md"
+    ]
+  }
+]

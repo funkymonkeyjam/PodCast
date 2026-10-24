@@ -57,6 +57,12 @@ python scripts/compare-auth.py --host $receiverAddress --profile pyatv --info-fi
 
 The script sends `/info` and the initial authentication request, then closes the connection. It sends no audio, completes no pairing and saves no credentials. Compare status, CSeq and elapsed time; omit `--info-first` to isolate the preceding request. This is an optional diagnosis tool, not a second sender or an application runtime dependency.
 
+For numeric process observations during a listening session, run
+`./scripts/observe-session.ps1 -Minutes 30` (or 120 for the final soak).
+It requires exactly one PodCast and one engine, follows those process IDs and
+writes only resource counters under ignored `artifacts/`. Inspect queue counters
+and obtain the listener's report separately; the sampler cannot hear gaps.
+
 ## Failure record
 
 For each failure record: commit/environment, exact action, expected versus observed behavior, failing layer (discovery, authentication, capture, conversion, transport or UI), redacted evidence, next hypothesis and owner. A repeated failure needs new evidence or a different hypothesis. Keep acceptance blocked until actual receiver behavior and required listening observations are established.

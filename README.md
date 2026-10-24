@@ -3,9 +3,10 @@
 Personal Windows 11 app: Spotify plays on one full-size Apple HomePod; other laptop audio stays local.
 
 **Status:** qualification prototype implemented. A self-contained Windows x64 build
-launches and discovers Office. A short PCM tone is audible on Office after an
-authentication deadline fix. Live Spotify isolation and soaks have
-not passed. See [current evidence](docs/testing/results.md).
+launches and streams Spotify to Office. The owner confirmed Spotify only on
+HomePod and a separate notification only on the local Poly Sync speaker.
+The initial 30-minute session passed listening; final soak and recovery
+acceptance remain. See [current evidence](docs/testing/results.md).
 
 - [Start building: orchestrator prompt](docs/prompts/build.md)
 - [Build plan](docs/plan/build-plan.md)

@@ -197,6 +197,48 @@ public sealed class SessionTests
         await controller.StartAsync(Pod(), settings); await Until(() => controller.Snapshot.State == PlaybackState.Streaming); first.Emit("error", message: "network lost");
         await second.Started.Task.WaitAsync(TimeSpan.FromSeconds(2)); Assert.True(first.Disposed); Assert.NotEqual(first.Session, second.Session);
     }
+
+    [Fact]
+    public async Task DisconnectDuringReconnectBackoffNeverReopensEngine()
+    {
+        var process = new FakeConnection(); var factory = new FakeFactory(process);
+        await using var controller = new SessionController(factory, new FakeAudio(), timing: Fast with { Retry = TimeSpan.FromMilliseconds(300) });
+        var stopRequested = new TaskCompletionSource<Task>(TaskCreationOptions.RunContinuationsAsynchronously);
+        controller.Changed += snapshot =>
+        {
+            if (snapshot.State == PlaybackState.Connecting && process.Disposed)
+                stopRequested.TrySetResult(controller.StopAsync());
+        };
+        var settings = Settings(); settings.ForceReconnect = true;
+        await controller.StartAsync(Pod(), settings); await Until(() => controller.Snapshot.State == PlaybackState.Streaming);
+        process.EmitData(new { @event = "error", code = "peer_closed", message = "connection ended", retryable = true });
+        var stop = await stopRequested.Task.WaitAsync(TimeSpan.FromSeconds(1));
+        await stop.WaitAsync(TimeSpan.FromSeconds(1));
+        await Task.Delay(450);
+        Assert.Equal(PlaybackState.Idle, controller.Snapshot.State);
+        Assert.Equal(1, factory.OpenCount);
+    }
+
+    [Fact]
+    public async Task ConfiguredReconnectAttemptsStopAfterExhaustion()
+    {
+        var processes = new[] { new FakeConnection(false), new FakeConnection(false), new FakeConnection(false) };
+        var factory = new FakeFactory(processes);
+        await using var controller = new SessionController(factory, new FakeAudio(), timing: Fast);
+        var settings = Settings(); settings.ForceReconnect = true; settings.MaxReconnectAttempts = 2;
+        await controller.StartAsync(Pod(), settings);
+        foreach (var process in processes)
+        {
+            await process.Started.Task.WaitAsync(TimeSpan.FromSeconds(1));
+            process.EmitData(new { @event = "error", code = "peer_closed", message = "connection ended", retryable = true });
+        }
+        await Until(() => processes.All(p => p.Disposed) && controller.Snapshot.State == PlaybackState.Error);
+        await Task.Delay(50);
+        Assert.Equal(3, factory.OpenCount);
+        Assert.Equal(2, controller.Snapshot.Diagnostics!.ReconnectCount);
+        Assert.Equal(PlaybackState.Error, controller.Snapshot.State);
+    }
+
     [Fact]
     public async Task AuthenticationFailureDoesNotReconnect()
     {
@@ -231,6 +273,44 @@ public sealed class SessionTests
         var process = new FakeConnection(); var audio = new FakeAudio(); await using var controller = new SessionController(new FakeFactory(process), audio, timing: Fast);
         var settings = Settings(); settings.MuteWhileStreaming = true; await controller.StartAsync(Pod(), settings); await Until(() => controller.Snapshot.State == PlaybackState.Streaming); await controller.UpdateSettingsAsync(settings); Assert.False(audio.Muted);
     }
+    [Theory]
+    [InlineData(0.0)]
+    [InlineData(0.01)]
+    [InlineData(1.05)]
+    public async Task SourcePeakPreservesRawValueAndResetsForSilenceAndOlderEngines(double peak)
+    {
+        var process = new FakeConnection();
+        await using var controller = new SessionController(new FakeFactory(process), new FakeAudio(), timing: Fast);
+        var settings = Settings(); settings.MasterVolume = 0;
+        await controller.StartAsync(Pod(), settings); await Until(() => controller.Snapshot.State == PlaybackState.Streaming);
+        process.Emit("capture_metrics", metrics: new { input_rate = 48000, source_peak = peak });
+        await Until(() => controller.Snapshot.Metrics?.SourcePeak == peak);
+        Assert.Equal(peak, controller.Snapshot.Metrics!.SourcePeak);
+        process.Emit("capture_metrics", metrics: new { input_rate = 48000, source_peak = 0.0 });
+        await Until(() => controller.Snapshot.Metrics?.SourcePeak == 0);
+        process.Emit("capture_metrics", metrics: new { input_rate = 48000 });
+        await Until(() => controller.Snapshot.Metrics?.SourcePeak is null);
+        Assert.Equal(PlaybackState.Streaming, controller.Snapshot.State);
+    }
+
+    [Theory]
+    [InlineData("-0.01")]
+    [InlineData("1e309")]
+    [InlineData("-1e309")]
+    public async Task InvalidSourcePeakIsUnavailableWhileStreamContinues(string number)
+    {
+        var process = new FakeConnection(); var factory = new FakeFactory(process);
+        await using var controller = new SessionController(factory, new FakeAudio(), timing: Fast);
+        await controller.StartAsync(Pod(), Settings()); await Until(() => controller.Snapshot.State == PlaybackState.Streaming);
+        process.Emit("capture_metrics", metrics: new { source_peak = 0.5 });
+        await Until(() => controller.Snapshot.Metrics?.SourcePeak == 0.5);
+        using var payload = JsonDocument.Parse("{\"event\":\"capture_metrics\",\"metrics\":{\"source_peak\":" + number + "}}");
+        process.EmitData(payload.RootElement);
+        await Until(() => controller.Snapshot.Metrics?.SourcePeak is null);
+        Assert.Equal(PlaybackState.Streaming, controller.Snapshot.State);
+        Assert.Equal(1, factory.OpenCount);
+    }
+
     [Fact]
     public async Task SilentMetricsEnterStandbyWithoutRestart()
     {

@@ -58,7 +58,13 @@ before allocating an entire line. PCM stays outside the command channel.
 Office took about five seconds to answer `/pair-pin-start` after `/info` on the
 same connection. That request now has a ten-second deadline, restoring the normal
 four-second control deadline on success or failure. Cancellation remains active.
-This resolves the observed authentication timeout, not the unresolved audible
-playback failure. Finite synthetic probes remain limited to five seconds, raw
+This resolves the observed authentication timeout. Finite synthetic probes remain limited to five seconds, raw
 peak 0.5 and gain 0.1 (effective peak at most 0.05); defaults retain the original
 quieter stimulus. Probes reject capture, recording, grouping and multiple hosts.
+
+The optional `source_peak` metric measures the latest input packet before EQ or
+gain and resets on silence/underrun. The playback panel and Monitor display its
+activity separately from receiver state. Missing/invalid metrics show waiting;
+input activity is not proof of audible playback. Progress bars bind OneWay to
+derived properties. `--ui-smoke --window-only` checks both window constructions
+without discovery, capture or receiver access.
