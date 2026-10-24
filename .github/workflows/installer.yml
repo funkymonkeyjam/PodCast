@@ -41,7 +41,6 @@ jobs:
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: '1'
       UV_PYTHON: '3.12'
-      CARGO_TARGET_DIR: ${{ runner.temp }}\podcast-cargo-target
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -51,6 +50,8 @@ jobs:
           dotnet-version: '10.0.402'
       - name: Prepare pinned Rust and Python tooling
         run: |
+          $cargoTarget = Join-Path $env:RUNNER_TEMP 'podcast-cargo-target'
+          "CARGO_TARGET_DIR=$cargoTarget" | Add-Content -LiteralPath $env:GITHUB_ENV -Encoding utf8
           rustup toolchain install 1.99.1 --profile minimal --component clippy --component rust-docs --target x86_64-pc-windows-msvc
           if ($LASTEXITCODE) { throw 'Rust toolchain setup failed.' }
           python -m pip install --disable-pip-version-check uv==0.13.5
