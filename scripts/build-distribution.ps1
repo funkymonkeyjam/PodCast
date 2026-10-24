@@ -72,7 +72,8 @@ if (-not $dirty) {
     & git -C $repo archive --format=zip "--prefix=PodCast-$displayVersion-source/" "--output=$(Join-Path $output "PodCast-$displayVersion-source.zip")" $revision
     if ($LASTEXITCODE -ne 0) { throw 'Corresponding-source archive failed.' }
 }
-Copy-Item -LiteralPath (Join-Path $repo 'docs/setup/install.md') -Destination (Join-Path $output 'README.md')
+$guide = (Get-Content -LiteralPath (Join-Path $repo 'docs/setup/install.md') -Raw).Replace('](routing.md)', "](https://github.com/funkymonkeyjam/PodCast/blob/$revision/docs/setup/routing.md)")
+[IO.File]::WriteAllText((Join-Path $output 'README.md'), $guide)
 if (Get-ChildItem -LiteralPath $output -File | Where-Object Length -ge 100MB) { throw 'A distribution file exceeds the normal GitHub file limit.' }
 $checksums = Get-ChildItem -LiteralPath $output -File | Where-Object Name -ne 'SHA256SUMS.txt' | Sort-Object Name | ForEach-Object { '{0}  {1}' -f (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant(), $_.Name }
 $checksums | Set-Content -LiteralPath (Join-Path $output 'SHA256SUMS.txt') -Encoding ascii

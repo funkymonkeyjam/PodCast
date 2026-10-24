@@ -2,6 +2,8 @@
 
 Personal Windows 11 app: Spotify plays on one full-size Apple HomePod; other laptop audio stays local.
 
+[Windows installer 0.1.0-rc.1](release/0.1.0-rc.1/PodCast-0.1.0-rc.1-Setup.exe) · [Install/uninstall guide](docs/setup/install.md) · [Source and checksums](release/0.1.0-rc.1/)
+
 **Status:** release candidate 0.1.0-rc.1 is being packaged. A self-contained Windows x64 build
 launches and streams Spotify to Office. The owner confirmed Spotify only on
 HomePod and a separate notification only on the local Poly Sync speaker.
