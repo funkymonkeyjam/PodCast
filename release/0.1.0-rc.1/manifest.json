@@ -1,0 +1,261 @@
+{
+  "version": "0.1.0-rc.1",
+  "productVersion": "0.1.0",
+  "architecture": "win-x64",
+  "sourceRevision": "dd5072726418329f0caf24260b1ba8b31f4362eb",
+  "sourceStamp": "dd5072726418329f0caf24260b1ba8b31f4362eb",
+  "sourceDirty": false,
+  "sourceUrl": "https://github.com/funkymonkeyjam/PodCast/tree/dd5072726418329f0caf24260b1ba8b31f4362eb",
+  "acceptance": "Release candidate: final two-hour listening and sleep/resume acceptance remain pending.",
+  "installer": {
+    "file": "PodCast-0.1.0-rc.1-Setup.exe",
+    "bytes": 52927042,
+    "sha256": "ec9b2ffbd40270d54edc67b168e6476244eac33edb6fc7bbf422e865ae59277d",
+    "signed": false
+  },
+  "tooling": {
+    "innoSetup": {
+      "version": "6.7.3",
+      "url": "https://github.com/jrsoftware/issrc/releases/download/is-6_7_3/innosetup-6.7.3.exe",
+      "sha256": "9c73c3bae7ed48d44112a0f48e66742c00090bdb5bef71d9d3c056c66e97b732",
+      "isccSha256": "0a8757031b33777e4c9cbffee40f11a5062b36d25cbe144c1db73b6102b80ad7",
+      "compilerDllSha256": "85a1e3090d3a5b85319f001b7c8f9ecfad45f37eff030a67bbe29ef58b7aa2c3",
+      "publisher": "Pyrsys B.V."
+    },
+    "vbCable": {
+      "version": "Pack45",
+      "url": "https://download.vb-audio.com/Download_CABLE/VBCABLE_Driver_Pack45.zip",
+      "sha256": "b950e39f01af1d04ea623c8f6d8eb9b6ea5c477c637295fabf20631c85116bfb",
+      "publisher": "BUREL VINCENT Entrepreneur individuel"
+    }
+  },
+  "payload": [
+    {
+      "path": "D3DCompiler_47_cor3.dll",
+      "bytes": 4741488,
+      "sha256": "a05f99734f7c4822fefc12b367af21fd0976ed6608752fb1e1e80b6ece7ecbbb"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1106,
+      "sha256": "95f14989b462b8c6b5b0256d6bc0fd89f4182106fa41deeaecfb4ff155e3a2fd"
+    },
+    {
+      "path": "LICENSE-GPLv3",
+      "bytes": 35823,
+      "sha256": "230184f60bae2feaf244f10a8bac053c8ff33a183bcc365b4d8b876d2b7f4809"
+    },
+    {
+      "path": "PenImc_cor3.dll",
+      "bytes": 157992,
+      "sha256": "007cb9a6781801c5ed071127314d12b40f8778356b1bce4316309a1be8c42c51"
+    },
+    {
+      "path": "PodCast.exe",
+      "bytes": 168249118,
+      "sha256": "0bbbcde389ccbb131b579a83f8e48b38d601d372387d687202c692f1965bfcf9"
+    },
+    {
+      "path": "PresentationNative_cor3.dll",
+      "bytes": 1235240,
+      "sha256": "091609705a031d5832f21548291c2670f06eadd781d465d3e1a5fad3772adc91"
+    },
+    {
+      "path": "SETUP.md",
+      "bytes": 3526,
+      "sha256": "7d44aaea73b8eebc74ee3f0ded066b03640d3ebecc1e490ade86987b90e451e3"
+    },
+    {
+      "path": "SOURCE-REVISION.txt",
+      "bytes": 42,
+      "sha256": "9008c070c190934e7cdc3ba82e4775ef43d4b9d907f2c6c7616962a1399d9216"
+    },
+    {
+      "path": "THIRD-PARTY-NOTICES.md",
+      "bytes": 2201,
+      "sha256": "32bbe99ef9e0ce54e37a8828f7f0d884055688fc4752879812e77a090254256a"
+    },
+    {
+      "path": "ThirdPartyNotices.Installer.txt",
+      "bytes": 1521,
+      "sha256": "2e5346868c2a18434489824e11d65c3031620f792fefc415d05f19cd441abf5c"
+    },
+    {
+      "path": "ThirdPartyNotices.Native.txt",
+      "bytes": 17072241,
+      "sha256": "f8374c3b089dd53b721c754ea4f303ea920992ce182e64b94d10e66ba749d6ff"
+    },
+    {
+      "path": "ThirdPartyNotices.txt",
+      "bytes": 81990,
+      "sha256": "22d06c7d9f8456ca5692d884d5fa9a8e1e378d01ea07ea70c0b6619cc87acc0b"
+    },
+    {
+      "path": "vcruntime140_cor3.dll",
+      "bytes": 124544,
+      "sha256": "d5e4d9a3e835fa679450145d6a7d94e36573a509317111904d9b3712c30d9066"
+    },
+    {
+      "path": "wpfgfx_cor3.dll",
+      "bytes": 1956648,
+      "sha256": "ad1c9dbbc2fcc2b274145727e8f04d5adf49a0c9ae4d1a3c33ec969fcd5b4bf1"
+    }
+  ],
+  "vbCable": [
+    {
+      "path": "pin_in.ico",
+      "bytes": 7358,
+      "sha256": "934865449455103c1c5997d8220acd160c3891f8a870f8e745b743d12681ac42"
+    },
+    {
+      "path": "pin_out.ico",
+      "bytes": 7358,
+      "sha256": "e8728a811e1f1af7d2ba31f77e47d449d5bba091e3e89a0df325ac7a3e67652c"
+    },
+    {
+      "path": "readme.txt",
+      "bytes": 3846,
+      "sha256": "f865f3e78e37006d48e56c93f51eff4ca79acda9969854400d79bfa3db38a8d5"
+    },
+    {
+      "path": "vbaudio_cable_2003.cat",
+      "bytes": 8868,
+      "sha256": "23a10e3bcd6ffe0de6d3d67830be4c447724b3299e13e954dd6bd2257cf55da1"
+    },
+    {
+      "path": "vbaudio_cable_2003.sys",
+      "bytes": 34024,
+      "sha256": "9650e20c38429d4680a7e603ecbe6601914ec4c94f8473112f21515bf53b84cf"
+    },
+    {
+      "path": "vbaudio_cable_vista.cat",
+      "bytes": 8872,
+      "sha256": "810b30193a400b1559302c23f81ef8aaadf038b3caf3aff9bf200b59688a2def"
+    },
+    {
+      "path": "vbaudio_cable_vista.sys",
+      "bytes": 34024,
+      "sha256": "8b02c26313b75ceb8fb9bd16b6b167cf70d7f3bc977dfc1986c0859f8c72b49f"
+    },
+    {
+      "path": "vbaudio_cable_win7.cat",
+      "bytes": 8868,
+      "sha256": "1c38afacf115818c925bc26faf216e3563e85bbc4d6d793e5f76f2aa670d08e7"
+    },
+    {
+      "path": "vbaudio_cable_win7.sys",
+      "bytes": 34024,
+      "sha256": "d047e3ee66e3ee023e598232ea22aa28dbb39adeabe818adfb2a72ab738df0b9"
+    },
+    {
+      "path": "vbaudio_cable_xp.cat",
+      "bytes": 8860,
+      "sha256": "51434ebbda13caf3c7617ef3035126baacca3e523feaf6828b398d52503d70d2"
+    },
+    {
+      "path": "vbaudio_cable_xp.sys",
+      "bytes": 34024,
+      "sha256": "9f9bc80a96cc94c761887749e51d9b4fb7ee6741ce624b8b2f9f85cd2e3fb02e"
+    },
+    {
+      "path": "vbaudio_cable64_2003.cat",
+      "bytes": 8876,
+      "sha256": "70f88e34c857c999367eb5b0303e23f5676b15a79ed4054f374749232baa0e3a"
+    },
+    {
+      "path": "vbaudio_cable64_2003.sys",
+      "bytes": 41192,
+      "sha256": "5a726f3f1616f587c9f118bf337fd359df3f7cb9fc967a14229d59a31f2a9720"
+    },
+    {
+      "path": "vbaudio_cable64_vista.cat",
+      "bytes": 8880,
+      "sha256": "cc17731e91f2f071e4a108bba34a2b8dcb69ea5975f4b9c39fcbc670e5cf15fb"
+    },
+    {
+      "path": "vbaudio_cable64_vista.sys",
+      "bytes": 41192,
+      "sha256": "703572fa9e8aa1616e6b2abd36b91a4718de77eadc02ae05ed2c8f304d058afc"
+    },
+    {
+      "path": "vbaudio_cable64_win10.cat",
+      "bytes": 12862,
+      "sha256": "0a921ebadbe39cf3fa7c14ff37d1ca22565a9651244bd3ac177dc810bc99072e"
+    },
+    {
+      "path": "vbaudio_cable64_win10.sys",
+      "bytes": 140760,
+      "sha256": "f01344602472f1b527de5ee98f18987c03db48fea444e457d061e937f1d531d5"
+    },
+    {
+      "path": "vbaudio_cable64_win7.cat",
+      "bytes": 8876,
+      "sha256": "800b541f06bba3925ba058e7cc7ca837cfd4d845e073309eb2a9d36a2626403a"
+    },
+    {
+      "path": "vbaudio_cable64_win7.sys",
+      "bytes": 41192,
+      "sha256": "c7f3be383c81ab9aa642479f95872e40e19a4cfd72d4c8d7de80abc11b713e21"
+    },
+    {
+      "path": "vbaudio_cable64arm_win10.sys",
+      "bytes": 149976,
+      "sha256": "2dc35db3dfad0f25771a3e59af38e8b1268878ebe127476ea75fee109f2927dd"
+    },
+    {
+      "path": "VBCABLE_ControlPanel.exe",
+      "bytes": 930048,
+      "sha256": "f5b44706fe7ba2eed0516dee791f826dc7a9891e997f6ce9704e2899300b14ff"
+    },
+    {
+      "path": "VBCABLE_Setup_x64.exe",
+      "bytes": 937728,
+      "sha256": "734c35dfa6d98f48782a451633ceb471166ec70d60482fd89a1123d0ee3c4f41"
+    },
+    {
+      "path": "VBCABLE_Setup.exe",
+      "bytes": 914176,
+      "sha256": "01ffc86b623ff3c75a883aa900c0215a89482988e1c8e55988fc0a9fb513dbed"
+    },
+    {
+      "path": "vbMmeCable_2003.inf",
+      "bytes": 4586,
+      "sha256": "64b67f80535d92a1a8625b4c9b9f7302ed959cb375947ca993b8cbaf205d3569"
+    },
+    {
+      "path": "vbMmeCable_vista.inf",
+      "bytes": 4142,
+      "sha256": "50761a7e817b3a5e96a4eb8e3d31fbc249b0601343dcb732dd3cbe0b0a70f232"
+    },
+    {
+      "path": "vbMmeCable_win7.inf",
+      "bytes": 4138,
+      "sha256": "5664f33116c1021f4280cfde1c571554fbb70b5480bd58a4fd53b281cd4f515c"
+    },
+    {
+      "path": "vbMmeCable_xp.inf",
+      "bytes": 4576,
+      "sha256": "58d9737fa732c11c8cc52839a3f61ecf2cb2a98a7dfffe423e3e591de7f56d46"
+    },
+    {
+      "path": "vbMmeCable64_2003.inf",
+      "bytes": 4596,
+      "sha256": "73aa40eef245da221c6fc6ea3299983421c9a9051df8da7414652304f01bb835"
+    },
+    {
+      "path": "vbMmeCable64_vista.inf",
+      "bytes": 4150,
+      "sha256": "340feb0ce66ffb7922595a763bf23d2fec07bed9e50b6cb6327e559174c515d4"
+    },
+    {
+      "path": "vbMmeCable64_win10.inf",
+      "bytes": 11361,
+      "sha256": "61c857be74831cc299d9be62f8d49d137f14063454fc54f859d5bc9b4b813daf"
+    },
+    {
+      "path": "vbMmeCable64_win7.inf",
+      "bytes": 4146,
+      "sha256": "da35387ccfe813f5c553bb7e0caf4e67adbb4429e742c2bd3c2014f80e6ec516"
+    }
+  ]
+}

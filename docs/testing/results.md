@@ -29,7 +29,7 @@ saved explicit CABLE Output by stable ID. Spotify alone uses CABLE Input.
 | A7 | NOT RUN | Initial 30-minute session passed with owner-confirmed no gaps/stutters. Final two-hour audible soak remains unrun; owner needs to listen at a later session. |
 | A8 | PASS | Actual Disconnect exits sender; no new sender during follow-up wait. Spotify output changed to Default using Volume mixer; owner confirmed local Poly Sync only and Office silent. Route then restored to CABLE Input. |
 | A9 | PASS | Normal Windows setup then quit/relaunch retains explicit source and connects Office. Settings/DPAPI/bounded-redacted-log tests pass; this receiver policy uses transient authentication, so no persistent PIN credential was required. |
-| A10 | NOT RUN | Root checked package 816d4aa has source revision/setup/GPL/.NET/Rust notices and clear review. New capture/network recovery guidance passes affected checks/review; its final package rebuild is pending. |
+| A10 | PASS | Versioned 0.1.0-rc.1 installer, exact corresponding source, notices, hashes and user guide delivered. Checked builds and independent review pass; disposable Windows install/upgrade-fixture/repair/uninstall pass. See installer evidence below. First-driver UAC/restart on a clean PC is separate from this driver-skipping CI check. |
 
 ### Completed software checks
 
@@ -172,3 +172,33 @@ optional shortcut pages were inspected, then setup cancelled before installation
 A no-instance --quit check with a deliberately missing WPF native DLL succeeds.
 Compilation does not establish installer lifecycle acceptance; disposable CI
 verification follows. No new receiver, routing or listening test was performed.
+
+### Installer lifecycle result
+
+[Hosted Windows run 40093906451](https://github.com/funkymonkeyjam/PodCast/actions/runs/40093906451)
+passes at source 83b7954, including all checked app suites and the disposable
+installer harness. Its retained results report `ok: true`, `upgrade: PASS`:
+
+- Synthetic lower-version fixture upgrades and replaces the executable while preserving preferences.
+- Reinstall repairs a missing owned native DLL; all installed payload/vendor hashes match.
+- Installed windows construct; --setup opens settings without changing saved preferences.
+- Same-image --quit stops the actual owner; a copied foreign-image helper is refused.
+- Uninstall removes owned files, shortcuts, registration and installed-path startup entry.
+- Settings, synthetic credential fixtures, a portable-path startup entry and shared driver inventory survive.
+
+The upgrade input is a synthetic no-op executable using the production installer,
+not a previously released application. CI uses /SKIPDRIVER; driver installation,
+UAC/restart and Spotify/HomePod playback are not exercised there.
+
+Final distribution source is dd50727 (packaging guardrails and guide-link fixes
+follow the tested implementation). The final local published app passes isolated
+window construction; distribution checksums, clean source identity, full inventory
+and source archive contents verify. Independent review validates the payload,
+notices and original vendor files. The unsigned installer is 52,927,042 bytes;
+its SHA-256 is recorded in release/0.1.0-rc.1/manifest.json and SHA256SUMS.txt.
+Sleep/resume and two-hour audible acceptance remain NOT RUN at the owner's request.
+
+[Clean-source run 40094006644](https://github.com/funkymonkeyjam/PodCast/actions/runs/40094006644)
+also passes all build and installer lifecycle steps at 61c0c06, including the
+release-output/source-archive guardrails. The only subsequent source changes in
+dd50727 correct release guide links; app and installer behavior are unchanged.

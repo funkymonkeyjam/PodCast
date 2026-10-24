@@ -85,6 +85,6 @@ the driver. The app setup itself is per-user and requires no elevation.
 an existing PodCast profile, process or installation. Run it only in a fresh
 disposable Windows runner/VM. CI checks payload hashes, repair/reinstall,
 same-image graceful shutdown, foreign-image shutdown rejection, uninstall and
-preservation of preferences/credentials/shared drivers. Upgrade is reported
-separately when a genuine lower-version fixture is supplied. These checks never
+preservation of preferences/credentials/shared drivers. CI upgrade checks use an
+explicitly labeled synthetic lower-version fixture. These checks never
 connect a receiver or install the driver and do not replace listening acceptance.

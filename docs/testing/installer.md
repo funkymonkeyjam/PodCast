@@ -18,3 +18,8 @@ labels this explicitly; it is not compatibility evidence for a prior release.
 
 Actual first-driver installation/UAC/restart and HomePod playback need interactive
 acceptance. Sleep/resume and final two-hour listening remain deferred.
+
+October 24, 2026: hosted Windows runs
+[40093906451](https://github.com/funkymonkeyjam/PodCast/actions/runs/40093906451) and
+[40094006644](https://github.com/funkymonkeyjam/PodCast/actions/runs/40094006644)
+pass all build and lifecycle steps. See [recorded results](results.md).
