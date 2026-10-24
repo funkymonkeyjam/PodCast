@@ -10,4 +10,15 @@
 .env
 .env.*
 native-credentials/
+**/.venv/
+**/__pycache__/
+**/.pytest_cache/
+**/.ruff_cache/
+**/TestResults/
+**/build/
+*.dpapi
+*.pem
+*.pfx
+*.key
+*.dmp
 /docs/research/WinAirCast-Technical-Investigation.pdf

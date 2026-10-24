@@ -33,3 +33,32 @@ Missing source means waiting/error, never whole-system or microphone fallback. D
 First qualify pinned AirFlash source against the actual HomePod. The saved baseline is `v0.4.0`; verify its full revision and review any required updates. Preserve upstream licenses and provenance. Record alternatives only when a demonstrated blocker justifies them.
 
 No stereo grouping, multiroom, EQ, video synchronization or Spotify API integration in version 1. No acoustic latency claim without measurement. The [static investigation](../research/README.md) informs the design but proves neither streaming success nor receiver compatibility.
+
+## Qualification implementation
+
+The imported AirFlash v0.4.0 revision is
+`81fa26bab0d5b42acaa4e5a5953ed05ae26e6350`; its layout remains under `src/AirFlash/`.
+Internal namespaces remain AirFlash, with PodCast assembly, tray, single-instance,
+sender and storage identities. Existing upstream advanced internals remain to
+avoid destabilizing transport; group connection is rejected and EQ defaults off.
+
+Native capture requires an explicit MMDevice ID for an active recording endpoint
+named `CABLE Output (VB-Audio Virtual Cable)`. It validates and opens that device
+before receiver contact. Missing/changed sources fail without fallback. The
+existing JSONL `source: loopback` value remains for IPC compatibility, although
+this source uses direct recording capture without the WASAPI loopback flag.
+Physical-output muting is disabled. The inherited bounded PCM queue and session
+cancellation/generation checks remain in use.
+
+Preferences use atomic JSON in `%APPDATA%/PodCast`. Pairing material uses separate
+PodCast DPAPI entropy and storage; missing APPDATA fails. Desktop diagnostics are
+redacted and retain two files of at most 256 KiB each. IPC input/output is bounded
+before allocating an entire line. PCM stays outside the command channel.
+
+Office took about five seconds to answer `/pair-pin-start` after `/info` on the
+same connection. That request now has a ten-second deadline, restoring the normal
+four-second control deadline on success or failure. Cancellation remains active.
+This resolves the observed authentication timeout, not the unresolved audible
+playback failure. Finite synthetic probes remain limited to five seconds, raw
+peak 0.5 and gain 0.1 (effective peak at most 0.05); defaults retain the original
+quieter stimulus. Probes reject capture, recording, grouping and multiple hosts.

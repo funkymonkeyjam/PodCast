@@ -2,7 +2,10 @@
 
 Personal Windows 11 app: Spotify plays on one full-size Apple HomePod; other laptop audio stays local.
 
-**Status:** planning complete; implementation and hardware qualification have not started.
+**Status:** qualification prototype implemented. A self-contained Windows x64 build
+launches and discovers Office. A short PCM tone is audible on Office after an
+authentication deadline fix. Live Spotify isolation and soaks have
+not passed. See [current evidence](docs/testing/results.md).
 
 - [Start building: orchestrator prompt](docs/prompts/build.md)
 - [Build plan](docs/plan/build-plan.md)
@@ -16,11 +19,22 @@ Personal Windows 11 app: Spotify plays on one full-size Apple HomePod; other lap
 | Path | Purpose |
 |---|---|
 | `docs/` | Designs, plan, prompt, decisions and test evidence |
-| `src/desktop/` | WPF application; create during implementation |
-| `src/engine/` | Rust audio/AirPlay engine; create during implementation |
+| `src/AirFlash/desktop/` | Adapted .NET 10/WPF application and tests |
+| `src/AirFlash/native/airflash-engine/` | Adapted Rust WASAPI/AirPlay engine and tests |
 | `tests/` | Automated tests and hardware procedures |
 | `scripts/` | Repeatable build and test entry points |
 
-Upstream imports may retain their build layout when moving them would add needless work. Document the actual layout here.
+Use [build instructions](docs/setup/build.md) and the root `scripts/build.ps1 -Check`.
+The qualification package is generated under `dist/PodCast/`; binaries are excluded
+from Git. Follow [Spotify routing and restoration](docs/setup/routing.md).
+
+Select **CABLE Output (VB-Audio Virtual Cable)** explicitly. PodCast rejects
+missing sources, microphones, physical playback capture and multiple receivers.
+Route only Spotify to **CABLE Input**; retain the normal Windows output.
+Disconnect releases HomePod and leaves Windows per-app routing in place.
+
+This fork uses GPLv3-or-later. [Pinned upstream provenance and notices](THIRD-PARTY-NOTICES.md)
+are retained alongside the source. Upstream documents inside `src/AirFlash/`
+describe AirFlash; root documents describe PodCast.
 
 Development repository: [funkymonkeyjam/PodCast](https://github.com/funkymonkeyjam/PodCast). Keep source, documentation and tests here; exclude credentials, recordings and generated output. Preserve upstream licenses when importing code.
