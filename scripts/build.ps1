@@ -46,7 +46,7 @@ try {
     Copy-Item -LiteralPath (Join-Path $repo 'docs/setup/routing.md') -Destination (Join-Path $output 'SETUP.md')
     $revision = & git -C $repo rev-parse HEAD
     if ($LASTEXITCODE -ne 0) { throw 'Cannot record source revision.' }
-    if (@(& git -C $repo status --porcelain).Count) { $revision += ' (dirty qualification checkpoint)' }
+    if (@(& git -C $repo status --porcelain -- . ':(exclude)release/**').Count) { $revision += ' (dirty qualification checkpoint)' }
     $revision | Set-Content -LiteralPath (Join-Path $output 'SOURCE-REVISION.txt')
     Get-Item -LiteralPath (Join-Path $output 'PodCast.exe')
 } finally { Pop-Location }

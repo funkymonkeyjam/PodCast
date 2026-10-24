@@ -92,10 +92,17 @@ public partial class App : Application
             _panel = new(_viewModel) { ShowInTaskbar = _windowMode }; MainWindow = _panel;
             _panel.SettingsRequested += ShowSettings; _panel.QuitRequested += Quit;
             _tray = new(_panel, _viewModel, ShowSettings, Quit); _panel.Tray = _tray;
-            _instance.Listen(() => Dispatcher.BeginInvoke(() => { if (_settings is not null) _settings.Activate(); else _panel.ShowPanel(); }));
+            _instance.Listen(() => Dispatcher.BeginInvoke(() => { if (_settings is not null) _settings.Activate(); else _panel.ShowPanel(); }),
+                () => Dispatcher.BeginInvoke(Quit));
             _viewModel.SettingsChanged += OnSettingsChanged;
+            if (args.Args.Contains("--setup")) await _viewModel.StopAsync();
             _viewModel.Start();
-            if (args.Args.Contains("--settings")) ShowSettings();
+            if (args.Args.Contains("--setup"))
+            {
+                ShowSettings(); _settings!.ViewModel.SelectedPage = SettingsViewModel.AudioCapturePage;
+                _settings.Closed += (_, _) => { if (!_quitting) _panel?.ShowPanel(); };
+            }
+            else if (args.Args.Contains("--settings")) ShowSettings();
             else if (_windowMode || !args.Args.Contains("--startup")) _panel.ShowPanel();
             AppPaths.Log("WPF host started, JSONL v1. Startup stage=shell ready");
             await _engine.InitializeAsync();

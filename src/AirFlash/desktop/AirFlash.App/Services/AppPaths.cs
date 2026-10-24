@@ -8,7 +8,7 @@ public static class AppPaths
 {
     public const string Name = "PodCast";
     public static string Version => typeof(AppPaths).Assembly.GetName().Version!.ToString(3);
-    public static string VersionLabel => $"PodCast {Version} · Qualification build";
+    public static string VersionLabel => "PodCast " + (typeof(AppPaths).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Split('+')[0] ?? Version);
     public static bool IsPreview => typeof(AppPaths).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Contains("-rc.", StringComparison.OrdinalIgnoreCase) == true;
     public static string DataDirectory { get; set; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Name);
     public static string LogDirectory => Path.Combine(DataDirectory, "logs");

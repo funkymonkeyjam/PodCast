@@ -2,10 +2,10 @@
 
 Personal Windows 11 app: Spotify plays on one full-size Apple HomePod; other laptop audio stays local.
 
-**Status:** qualification prototype implemented. A self-contained Windows x64 build
+**Status:** release candidate 0.1.0-rc.1 is being packaged. A self-contained Windows x64 build
 launches and streams Spotify to Office. The owner confirmed Spotify only on
 HomePod and a separate notification only on the local Poly Sync speaker.
-The initial 30-minute session passed listening; final soak and recovery
+The initial 30-minute session passed listening; final soak and sleep/resume
 acceptance remain. See [current evidence](docs/testing/results.md).
 
 - [Start building: orchestrator prompt](docs/prompts/build.md)
@@ -26,8 +26,8 @@ acceptance remain. See [current evidence](docs/testing/results.md).
 | `scripts/` | Repeatable build and test entry points |
 
 Use [build instructions](docs/setup/build.md) and the root `scripts/build.ps1 -Check`.
-The qualification package is generated under `dist/PodCast/`; binaries are excluded
-from Git. Follow [Spotify routing and restoration](docs/setup/routing.md).
+Intermediate builds are generated under `dist/PodCast/`; they are excluded
+from Git. Versioned distributions are checked in under `release/`; see the [install/uninstall guide](docs/setup/install.md). Follow [Spotify routing and restoration](docs/setup/routing.md).
 
 Select **CABLE Output (VB-Audio Virtual Cable)** explicitly. PodCast rejects
 missing sources, microphones, physical playback capture and multiple receivers.
@@ -38,4 +38,4 @@ This fork uses GPLv3-or-later. [Pinned upstream provenance and notices](THIRD-PA
 are retained alongside the source. Upstream documents inside `src/AirFlash/`
 describe AirFlash; root documents describe PodCast.
 
-Development repository: [funkymonkeyjam/PodCast](https://github.com/funkymonkeyjam/PodCast). Keep source, documentation and tests here; exclude credentials, recordings and generated output. Preserve upstream licenses when importing code.
+Development repository: [funkymonkeyjam/PodCast](https://github.com/funkymonkeyjam/PodCast). Keep source, documentation and tests here; exclude credentials, recordings and intermediate build output. Preserve upstream licenses when importing code.

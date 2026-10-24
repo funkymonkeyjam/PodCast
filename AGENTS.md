@@ -8,5 +8,5 @@
 - Assign non-overlapping files before concurrent edits. Keep shared contracts stable; integrate and review each meaningful change.
 - Test the affected behavior; broaden checks at integration boundaries. Never equate a successful build or mock with successful HomePod playback.
 - Stop on a missing source; never fall back silently to system audio or microphone capture.
-- Preserve upstream provenance/licenses. Do not commit secrets, user settings, music recordings or generated build output.
+- Preserve upstream provenance/licenses. Do not commit secrets, user settings, music recordings or generated build output, except reviewed versioned install distributions under `release/` explicitly requested by the owner.
 - Commit and push coherent checkpoints. Fetch and inspect before integrating remote work. Do not force-push, discard user work or bypass protected branches.

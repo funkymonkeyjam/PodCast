@@ -47,3 +47,44 @@ The imported upstream `src/AirFlash/scripts/build.ps1` reserves upstream release
 versions and creates an AirFlash MSI. Use the root script for PodCast.
 See [provenance](../../THIRD-PARTY-NOTICES.md) and
 [hardware qualification](../testing/qualification.md) before playback.
+
+## Versioned installer
+
+The final app version is centralized in `Version.props`. With the same SDK/Rust/
+Python tools available, run:
+
+```powershell
+./scripts/build-distribution.ps1 -Check
+```
+
+The script verifies pinned downloads and publishers, builds/tests the app,
+collects notices and compiles Inno Setup 6.7.3. It writes a complete offline
+installer, source ZIP, component/source manifest, checksums and user instructions
+to `release/<version>/`. These versioned distribution files are intentionally
+checked in at the owner's request; development caches and raw publish output
+remain ignored. Each installer must remain below GitHub's 100 MiB file limit.
+
+Source must be committed before a production distribution is built. A committed
+release folder is immutable: bump `Version.props` for a new release, or use
+`-OutputDirectory artifacts/verification/<version>` to rebuild without replacing
+the published files. `-AllowDirty` creates an ignored local preview and must not
+be used for the committed distribution. `-SkipAppBuild` is valid only when the
+published app version/source stamp already matches the clean checkout.
+
+The compiler and full base VB-CABLE archive are pinned in
+`scripts/packaging-dependencies.json`; `scripts/prepare-packaging.ps1` validates
+their SHA-256 values, publisher signatures and every extracted driver file. The
+vendor package is preserved unchanged. It is identified as VB-Audio donationware
+in setup and its installed support notices; the bundling basis is the vendor's
+[specific VB-CABLE distribution conditions](https://vb-audio.com/Services/licensing.htm).
+No undocumented silent driver switches, automatic restart or trust-store change
+is used. Windows permission/vendor steps remain necessary on a machine without
+the driver. The app setup itself is per-user and requires no elevation.
+
+`scripts/test-installer.ps1 -DisposableEnvironment` is destructive and refuses
+an existing PodCast profile, process or installation. Run it only in a fresh
+disposable Windows runner/VM. CI checks payload hashes, repair/reinstall,
+same-image graceful shutdown, foreign-image shutdown rejection, uninstall and
+preservation of preferences/credentials/shared drivers. Upgrade is reported
+separately when a genuine lower-version fixture is supplied. These checks never
+connect a receiver or install the driver and do not replace listening acceptance.

@@ -17,10 +17,14 @@ namespace AirFlash.App.Verification;
 // Opt-in, isolated UI verification. Never constructs real discovery, audio or autostart services.
 internal static class UiSmoke
 {
-    public static async Task<int> RunAsync(string[] args)
+    internal static string ReportPath(string[] args)
     {
         var index = Array.IndexOf(args, "--output");
-        var report = index >= 0 && index + 1 < args.Length ? Path.GetFullPath(args[index + 1]) : Path.Combine(Path.GetTempPath(), "airplay-ui-smoke", "report.json");
+        return index >= 0 && index + 1 < args.Length ? Path.GetFullPath(args[index + 1]) : Path.Combine(Path.GetTempPath(), "airplay-ui-smoke", "report.json");
+    }
+    public static async Task<int> RunAsync(string[] args)
+    {
+        var report = ReportPath(args);
         var directory = Path.GetDirectoryName(report)!; Directory.CreateDirectory(directory);
         AppPaths.DataDirectory = Path.Combine(directory, "isolated-data");
         var checks = new List<string>();

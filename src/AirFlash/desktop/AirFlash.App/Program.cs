@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using AirFlash.App.Services;
+using AirFlash.App.Verification;
 using AirFlash.Core;
 namespace AirFlash.App;
 
@@ -10,18 +11,31 @@ internal static class Program
     [STAThread]
     public static int Main(string[] args)
     {
+        if (args.Contains("--quit"))
+        {
+            try
+            {
+                var instance = new SingleInstance();
+                try { return instance.IsOwner || instance.RequestQuitAsync().GetAwaiter().GetResult() ? 0 : 1; }
+                finally { instance.DisposeAsync().AsTask().GetAwaiter().GetResult(); }
+            }
+            catch (Exception error) { AppPaths.Log($"Graceful quit failed: {error}"); return 1; }
+        }
+        if (IsDiagnostic(args))
+            AppPaths.DataDirectory = Path.Combine(Path.GetTempPath(), "PodCast-diagnostics", Guid.NewGuid().ToString("N"));
         // Also works when the WPF resource dictionary or localization cannot initialize.
         AppDomain.CurrentDomain.UnhandledException += (_, e) => AppPaths.Log($"Fatal stage=unhandled {e.ExceptionObject}");
         TaskScheduler.UnobservedTaskException += (_, e) => AppPaths.Log($"Background task failed {e.Exception}");
         var stage = "platform";
         try
         {
-            // The collector gets isolated logs, including failures before WPF initialization.
-            if (args.Contains("--compat-check"))
+            if (args.Contains("--ui-smoke") || args.Contains("--tray-smoke"))
+                AppPaths.DataDirectory = Path.Combine(Path.GetDirectoryName(UiSmoke.ReportPath(args))!, "isolated-data");
+            else if (IsDiagnostic(args))
             {
-                var index = Array.IndexOf(args, "--output");
+                var index = Array.FindIndex(args, arg => arg is "--output" or "--self-check-output");
                 if (index >= 0 && index + 1 < args.Length)
-                    AppPaths.DataDirectory = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(args[index + 1]))!, "compat-logs");
+                    AppPaths.DataDirectory = Path.Combine(Path.GetDirectoryName(Path.GetFullPath(args[index + 1]))!, args.Contains("--compat-check") ? "compat-logs" : "isolated-data");
             }
             AppPaths.Log($"Startup stage={stage} version={AppPaths.Version} os={Environment.OSVersion.Version} architecture={RuntimeInformation.ProcessArchitecture}");
             if (!WindowsCapabilities.Current.Supported) throw new PlatformNotSupportedException(WindowsCompatibility.Requirement);

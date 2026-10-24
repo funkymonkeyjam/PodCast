@@ -1,0 +1,101 @@
+name: Installer lifecycle
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/installer.yml'
+      - 'installer/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'licenses/**'
+      - 'release/**'
+      - 'src/AirFlash/desktop/**'
+      - 'src/AirFlash/native/**'
+      - 'Version.props'
+      - 'rust-toolchain.toml'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/installer.yml'
+      - 'installer/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'licenses/**'
+      - 'release/**'
+      - 'src/AirFlash/desktop/**'
+      - 'src/AirFlash/native/**'
+      - 'Version.props'
+      - 'rust-toolchain.toml'
+
+permissions:
+  contents: read
+
+jobs:
+  lifecycle:
+    runs-on: windows-2025
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      UV_PYTHON: '3.12'
+      CARGO_TARGET_DIR: ${{ runner.temp }}\podcast-cargo-target
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        with:
+          dotnet-version: '10.0.402'
+      - name: Prepare pinned Rust and Python tooling
+        run: |
+          rustup toolchain install 1.99.1 --profile minimal --component clippy --component rust-docs --target x86_64-pc-windows-msvc
+          if ($LASTEXITCODE) { throw 'Rust toolchain setup failed.' }
+          python -m pip install --disable-pip-version-check uv==0.13.5
+          if ($LASTEXITCODE) { throw 'uv installation failed.' }
+          uv python install 3.12
+          if ($LASTEXITCODE) { throw 'Python installation failed.' }
+      - name: Prepare pinned compiler and complete vendor package
+        run: ./scripts/prepare-packaging.ps1
+      - name: Build checked distribution
+        id: distribution
+        run: |
+          [xml]$versionFile = Get-Content Version.props -Raw
+          $version = [string]$versionFile.Project.PropertyGroup.Version
+          $output = Join-Path $env:GITHUB_WORKSPACE "artifacts/ci-distribution/$version"
+          ./scripts/build-distribution.ps1 -Check -OutputDirectory $output
+          "version=$version" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
+          "directory=$output" | Add-Content -LiteralPath $env:GITHUB_OUTPUT
+      - name: Build synthetic lower-version upgrade fixture
+        run: ./scripts/build-installer-fixture.ps1
+      - name: Exercise disposable installer lifecycle without drivers or audio sessions
+        env:
+          DISTRIBUTION_DIRECTORY: ${{ steps.distribution.outputs.directory }}
+          DISPLAY_VERSION: ${{ steps.distribution.outputs.version }}
+        run: |
+          $version = $env:DISPLAY_VERSION
+          $installer = Join-Path $env:DISTRIBUTION_DIRECTORY "PodCast-$version-Setup.exe"
+          ./scripts/test-installer.ps1 -Installer $installer -DisposableEnvironment -SyntheticPreviousInstaller -PreviousInstaller artifacts/installer-fixture/PodCast-0.0.0-rc.1-Setup.exe
+      - name: Retain lifecycle evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: installer-evidence-${{ github.run_id }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            ${{ runner.temp }}/PodCast-installer-test-*/*.json
+            ${{ runner.temp }}/PodCast-installer-test-*/*.log
+            artifacts/ui-launch.json
+            artifacts/installer-fixture/fixture.json
+            artifacts/compatibility/*.json
+            src/AirFlash/artifacts/compatibility/*.json
+      - name: Retain versioned installer for review
+        if: success()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        with:
+          name: PodCast-installer-${{ github.run_id }}
+          retention-days: 14
+          path: ${{ steps.distribution.outputs.directory }}/

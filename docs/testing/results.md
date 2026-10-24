@@ -156,3 +156,19 @@ soak. The last built package is 816d4aa; no overnight test is running.
 
 Continue [qualification](qualification.md). Reset affected results after relevant
 changes; packet counts and mocks never establish listening acceptance.
+
+## Versioned installer follow-up — October 24, 2026
+
+The owner requested a bundled installation, easy uninstall and a distribution
+versioned here, and deferred remaining listening. Release candidate 0.1.0-rc.1
+adds the self-contained payload, unchanged official base VB-CABLE package,
+per-user shortcuts/registration and graceful update/uninstall. User preferences
+and the shared driver are retained. The root build passes 56 Rust, 246 .NET,
+117 Python, five IPC and eight notice checks, Clippy and isolated WPF construction.
+Two Rust hardware/wall-clock tests remain intentionally ignored.
+
+The unsigned installer preview compiles to approximately 53 MB. Prerequisite and
+optional shortcut pages were inspected, then setup cancelled before installation.
+A no-instance --quit check with a deliberately missing WPF native DLL succeeds.
+Compilation does not establish installer lifecycle acceptance; disposable CI
+verification follows. No new receiver, routing or listening test was performed.

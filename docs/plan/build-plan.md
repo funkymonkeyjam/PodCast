@@ -120,6 +120,14 @@ The overall allowance is **roughly 6-12 focused development days after a success
 
 ## Later improvements, only after acceptance
 
+Packaging scope update, October 24, 2026: the owner requested the final build and
+a polished installer now, with listening tests deferred. Ship a versioned offline
+setup under `release/`, including all app runtimes and the unchanged base
+VB-CABLE package under its vendor conditions. Use per-user install/uninstall,
+graceful shutdown and preservation of personal settings/shared drivers. Verify
+the software installer lifecycle separately; sleep/resume and the final two-hour
+audible soak remain acceptance work for a later listening session.
+
 - Add driver-free process-tree capture for optional mirroring. Microsoft's API supports capturing a process and its children on Windows build 20348 or later. Track executable identity and reacquire PIDs after restart; stop on ambiguous matches. This still does not silence local playback. [Microsoft application-loopback sample](https://learn.microsoft.com/en-us/samples/microsoft/windows-classic-samples/applicationloopbackaudio-sample/).
 - Add Windows media-session title/playback controls if useful, without making audio depend on metadata.
 - Investigate reliable per-app output switching and restoration; retain manual routing as a fallback.

@@ -1,0 +1,42 @@
+PodCast setup
+
+This release candidate installs PodCast for your Windows account. It includes
+the self-contained application, Rust sender, native WPF libraries, licenses and
+notices. No separate .NET or Visual C++ runtime installation is required.
+
+PodCast is provided under the GNU GPL version 3 or later. The complete license
+is included as LICENSE-GPLv3 beside PodCast.exe, together with upstream and
+third-party notices. Source and build instructions:
+https://github.com/funkymonkeyjam/PodCast
+
+VB-CABLE is a separate product by VB-Audio Software / Vincent Burel.
+Official source: https://vb-audio.com/Cable/
+Donation and licensing information: https://vb-audio.com/Services/licensing.htm
+Support the vendor: https://shop.vb-audio.com/
+
+The complete, unchanged VB-CABLE Driver Pack45 package accompanies PodCast in
+Support\VB-CABLE. VB-CABLE remains VB-Audio's donationware; including it does
+not change its origin, license or donation model. The vendor's installation
+program and documentation are preserved.
+
+If VB-CABLE is not registered, Setup opens its original installer with an
+administrator permission request. Choose Install Driver in that program and
+follow its instructions. Setup uses no undocumented silent driver switches.
+An existing cable, including a disabled one, is left unchanged. If the vendor
+requires a restart, restart Windows yourself when convenient; PodCast Setup
+does not restart the computer.
+
+PodCast setup does not change Windows audio devices, monitoring or routing.
+After installation, confirm CABLE Output and your one HomePod in PodCast.
+Use Windows Volume mixer to route only Spotify to CABLE Input. Keep your
+normal Windows output and turn off the cable's Listen setting.
+
+Removing PodCast removes its installed application, bundled support files,
+shortcuts and Windows uninstall entry. Personal preferences, pairing data,
+logs, extracted engine cache and the shared VB-CABLE driver are preserved.
+It removes a PodCast sign-in entry only if that entry points to this installed
+copy. A sign-in entry for a separate portable copy is left unchanged.
+
+This release candidate still requires the outstanding real-device acceptance
+checks documented with the release. Installing it does not establish successful
+HomePod playback or complete the final listening soak.

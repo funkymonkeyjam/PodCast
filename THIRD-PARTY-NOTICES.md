@@ -25,3 +25,12 @@ The root build generates `ThirdPartyNotices.Native.txt` from locked Rust package
 and toolchain notices. Two incomplete published crates use
 [versioned notice supplements](licenses/native/README.md); their exact provenance
 and hashes accompany the generated notices.
+
+The versioned Windows installer uses Inno Setup 6.7.3 by Jordan Russell and
+Martijn Laan; its license accompanies the installed app. It also bundles the
+complete, unchanged base VB-CABLE Driver Pack45 by VB-Audio Software / Vincent
+Burel, separately from PodCast's GPL code. VB-CABLE is donationware; its origin,
+vendor documentation and opportunity to donate are retained in setup and
+`Support/VB-CABLE`. Bundling follows the vendor's
+[specific distribution conditions](https://vb-audio.com/Services/licensing.htm).
+Additional paid CABLE A+B/C+D products are not included.

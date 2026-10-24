@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../../../Version.props"/>
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <OutputType Condition="'$(AirFlashConsole)' == 'true'">Exe</OutputType>
@@ -11,7 +12,6 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <SelfContained>true</SelfContained>
     <PublishSingleFile>true</PublishSingleFile>
-    <Version>0.1.0</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets/app.ico</ApplicationIcon>
     <PublishTrimmed>false</PublishTrimmed>
