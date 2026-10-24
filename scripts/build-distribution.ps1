@@ -18,10 +18,14 @@ if ($dirty -and -not $AllowDirty) { throw 'Commit source changes before making a
 if ($AllowDirty -and -not $OutputDirectory) { $OutputDirectory = Join-Path $repo 'artifacts/package-preview' }
 if (-not $OutputDirectory) { $OutputDirectory = Join-Path $repo "release/$displayVersion" }
 $output = [IO.Path]::GetFullPath($OutputDirectory)
+if ($AllowDirty -and -not $output.StartsWith([IO.Path]::GetFullPath((Join-Path $repo 'artifacts')) + '\', [StringComparison]::OrdinalIgnoreCase)) {
+    throw 'Development previews must remain inside ignored artifacts/.'
+}
 if ($output -eq [IO.Path]::GetFullPath((Join-Path $repo "release/$displayVersion")) -and
     @(& git -C $repo ls-files -- "release/$displayVersion/manifest.json").Count) {
     throw 'This distribution version is already checked in. Bump Version.props, or use a separate output directory for verification.'
 }
+if ((Test-Path -LiteralPath $output) -and @(Get-ChildItem -LiteralPath $output -Force).Count) { throw 'Use an empty output directory to avoid mixing distributions.' }
 $publish = Join-Path $repo 'dist/PodCast'
 $tools = & (Join-Path $PSScriptRoot 'prepare-packaging.ps1')
 if (-not $IsccPath) { $IsccPath = $tools.IsccPath }
@@ -44,6 +48,9 @@ New-Item -ItemType Directory -Path $output -Force | Out-Null
 if ($LASTEXITCODE -ne 0) { throw 'Installer compilation failed; do not distribute residual output.' }
 $setup = Join-Path $output "PodCast-$displayVersion-Setup.exe"
 if ((Get-Item -LiteralPath $setup).Length -ge 100MB) { throw 'Installer exceeds the normal GitHub file limit; configure Git LFS before committing it.' }
+if ((& git -C $repo rev-parse HEAD) -ne $revision -or (-not $AllowDirty -and @(& git -C $repo status --porcelain -- . ':(exclude)release/**').Count)) {
+    throw 'Source changed during packaging. Rebuild from a stable source checkpoint.'
+}
 
 function File-Inventory([string]$Directory) {
     @(Get-ChildItem -LiteralPath $Directory -File -Recurse | Sort-Object FullName | ForEach-Object {
@@ -62,7 +69,7 @@ $manifest = [ordered]@{
 }
 $manifest | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $output 'manifest.json') -Encoding utf8
 if (-not $dirty) {
-    & git -C $repo archive --format=zip "--prefix=PodCast-$displayVersion-source/" "--output=$(Join-Path $output "PodCast-$displayVersion-source.zip")" HEAD
+    & git -C $repo archive --format=zip "--prefix=PodCast-$displayVersion-source/" "--output=$(Join-Path $output "PodCast-$displayVersion-source.zip")" $revision
     if ($LASTEXITCODE -ne 0) { throw 'Corresponding-source archive failed.' }
 }
 Copy-Item -LiteralPath (Join-Path $repo 'docs/setup/install.md') -Destination (Join-Path $output 'README.md')
