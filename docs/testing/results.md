@@ -25,7 +25,7 @@ saved explicit CABLE Output by stable ID. Spotify alone uses CABLE Input.
 | A3 | PASS | After raising Spotify's volume to 40%, owner confirmed music only on Office, silent on the local Poly Sync speaker. |
 | A4 | PASS | Owner confirmed the separate notification only on Poly Sync while Spotify remained only on Office. |
 | A5 | PASS | Actual pause/resume and source silence/activity observed; receiver volume 73→68 confirmed and restored to 73. Disconnect stops the engine cleanly. Owner confirmed tray panel opens while music continues. |
-| A6 | NOT RUN | Actual Spotify restart, engine exit, source removal, source-format invalidation and scoped network interruption recover with no fallback; listening confirmations recorded below. Receiver preemption and sleep/resume remain. |
+| A6 | NOT RUN | Actual Spotify restart, engine exit, source removal, source-format invalidation, scoped network interruption and receiver takeover/reconnect pass; listening confirmations below. Sleep/resume remains unrun. |
 | A7 | NOT RUN | Initial 30-minute session passed with owner-confirmed no gaps/stutters. Final two-hour audible soak remains unrun; owner needs to listen at a later session. |
 | A8 | PASS | Actual Disconnect exits sender; no new sender during follow-up wait. Spotify output changed to Default using Volume mixer; owner confirmed local Poly Sync only and Office silent. Route then restored to CABLE Input. |
 | A9 | PASS | Normal Windows setup then quit/relaunch retains explicit source and connects Office. Settings/DPAPI/bounded-redacted-log tests pass; this receiver policy uses transient authentication, so no persistent PIN credential was required. |
@@ -140,6 +140,19 @@ confirmed current music only on Office, Poly Sync silent and no old audio replay
 also confirming the restored original 48 kHz path. No laptop Wi-Fi interruption
 was needed. The diagnostic follow-up adds reconnect guidance for known transport
 failure codes while retaining raw details; the full desktop suite passes 246.
+
+The owner then selected Office from another device and confirmed that device's
+audio was audible there. PodCast detected event-channel EOF (`peer_closed`),
+stopped its sender and displayed Connection error rather than continuing to show
+silent playback. After the owner released Office, explicit Connect created a
+fresh sender and the owner confirmed Spotify only on Office. The other device
+had changed receiver volume to 15%; the owner confirmed audible playback there.
+
+The owner accidentally powered off the PC during the proposed sleep/resume check
+and requested stopping for the night on October 24. No sleep/resume recovery or
+post-shutdown playback acceptance is claimed. Resume with that check, package the
+reviewed recovery guidance from 7afdbf8, and arrange the final two-hour listening
+soak. The last built package is 816d4aa; no overnight test is running.
 
 Continue [qualification](qualification.md). Reset affected results after relevant
 changes; packet counts and mocks never establish listening acceptance.
