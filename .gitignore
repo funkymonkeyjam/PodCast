@@ -1,0 +1,13 @@
+/tmp/
+/artifacts/
+/dist/
+**/bin/
+**/obj/
+**/target/
+.vs/
+*.user
+*.log
+.env
+.env.*
+native-credentials/
+/docs/research/WinAirCast-Technical-Investigation.pdf

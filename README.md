@@ -9,7 +9,7 @@ Personal Windows 11 app: Spotify plays on one full-size Apple HomePod; other lap
 - [Architecture](docs/design/architecture.md)
 - [Acceptance tests](docs/testing/acceptance.md) and [results](docs/testing/results.md)
 - [Current state](docs/STATUS.md)
-- [Background investigation](docs/research/WinAirCast-Technical-Investigation.pdf)
+- [Background investigation reference](docs/research/README.md)
 
 ## Layout
 
