@@ -407,6 +407,19 @@ public sealed class AppViewModel : ObservableObject, IAsyncDisposable
         else await Session.SetDeviceVolumeAsync(id, 0);
     }
     public Task SetReceiverVolumeAsync(string id, int value) => Session.SetDeviceVolumeAsync(id, value);
+    public Task AdjustReceiverVolumeAsync(int change)
+    {
+        if (_closing) return Task.CompletedTask;
+        // Session publishes pending targets synchronously; the UI snapshot can lag behind dial detents.
+        var snapshot = Session.Snapshot;
+        var target = MediaControlPolicy.ReceiverVolumeTarget(snapshot, change);
+        if (target is null)
+        {
+            AppPaths.Log("Spotify dial volume ignored: no active receiver with available volume control.");
+            return Task.CompletedTask;
+        }
+        return SetReceiverVolumeAsync(snapshot.Receiver!.Id, target.Value);
+    }
     private void VolumeChanged() { _editRevision++; _volumeDirty = true; _volumeTimer.Stop(); if (!_closing) _volumeTimer.Start(); }
     public async Task FlushVolumeAsync()
     {

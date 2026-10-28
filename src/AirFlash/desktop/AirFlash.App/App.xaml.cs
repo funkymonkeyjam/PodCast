@@ -33,6 +33,7 @@ public partial class App : Application
     private SingleInstance? _instance;
     private ThemeService? _theme;
     private AppViewModel? _viewModel;
+    private MediaHotkeyService? _mediaHotkeys;
     private ControlPanel? _panel;
     private bool _windowMode;
     private SettingsWindow? _settings;
@@ -88,6 +89,8 @@ public partial class App : Application
             var factory = new ExtractingEngineFactory();
             _engine = new(token => QueryEngineAsync(factory, token), AppPaths.Log);
             _viewModel = new(store, new WindowsDiscovery(log: AppPaths.Log), new Autostart(), audio, factory, Dispatcher, _engine);
+            try { _mediaHotkeys = new(_viewModel.AdjustReceiverVolumeAsync, _viewModel.ShowError); }
+            catch (Exception error) { _viewModel.ShowError(error); }
             _windowMode = args.Args.Contains("--window");
             _panel = new(_viewModel) { ShowInTaskbar = _windowMode }; MainWindow = _panel;
             _panel.SettingsRequested += ShowSettings; _panel.QuitRequested += Quit;
@@ -153,6 +156,7 @@ public partial class App : Application
         if (_quitting) return; _quitting = true;
         try
         {
+            _mediaHotkeys?.Dispose();
             if (_settings is { } applying) await applying.ViewModel.ApplicationCompleted;
             _settings?.Close();
             if (_engine is not null) await _engine.DisposeAsync();

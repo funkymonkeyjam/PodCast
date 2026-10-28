@@ -1,5 +1,6 @@
 # Status
 
+- Desktop preview 0.1.0-rc.2: global Spotify-specific play/pause and receiver-volume shortcuts, plus passive USB ACK05 center-button support. 263 .NET tests and Release build pass; hotkey-only preview publish/static audit and isolated UI launch pass. Runtime shortcuts changed Office receiver volume 47→50 and toggled Spotify play/pause. Physical ACK05 rotation/center recognition and audible isolation are pending. See [controls](setup/spotify-controls.md). The rc.1 distribution remains unchanged.
 - Stage: versioned Windows x64 release candidate 0.1.0-rc.1 delivered at the owner's request; remaining listening tests deferred.
 - Target: Spotify only on Office HomePod; other Windows audio local. Repository: https://github.com/funkymonkeyjam/PodCast.
 - Ownership: orchestrator integrates/Git and owns hardware sessions. Audio and desktop agents review bounded changes; test/review owns disposable installer checks.
