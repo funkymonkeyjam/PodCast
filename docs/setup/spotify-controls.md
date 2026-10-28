@@ -37,6 +37,10 @@ F10/F11 changed Office receiver readback to 47 then 50, with master gain 100;
 F9 changed Spotify's current track from paused to playing and back to paused.
 Normal Windows profile settings were aligned with the configured tool-launch
 profile after backing up both, keeping explicit CABLE capture, Office-only
-auto-connect and startup enabled. Physical ACK05 recognition and audible volume
-isolation remain pending. This preview does not
+auto-connect and startup enabled. The final installed preview registers one
+ACK05 source and logged four physical center presses without a Spotify-control
+error. The owner confirmed dial turns change only Office HomePod volume and
+center presses pause/resume Spotify, including dial rotation after pressing the
+center. Existing Wispr button mappings were preserved byte-for-byte. Actual
+sign-in after restart remains untested. This preview does not
 replace the immutable 0.1.0-rc.1 installer distribution.
